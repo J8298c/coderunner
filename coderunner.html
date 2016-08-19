@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+    <style media="screen">
+    body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+  }
+  #topbar {
+      width: 100%;
+      background-color: rgb(73, 184, 101);
+      height: 40px;
+      display: inline-block;
+      color: white;
+  }
+  .logo {
+      float: left;
+      font-size: 115%;
+      padding-left: 6px;
+      width: 200px;
+  }
+  .runbtn {
+      float: right;
+      padding: 5px 10px 0 0;
+  }
+  #run {
+      font-size: 120%;
+  }
+  ul {
+      width: 200px;
+      margin: 0 auto;
+      height: 27px;
+      padding-top: 10px;
+  }
+  li {
+      float: left;
+      list-style: none;
+      font-size: 110%;
+      padding: 4px;
+      margin: 0 auto;
+  }
+  .clear {
+      clear: both;
+  }
+  .appcontainer {
+      height: 100%;
+      width: 49%;
+      float: left;
+      position: relative;
+  }
+  .appcontainer textarea {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-right: 1px solid grey;
+      font-family: monospace;
+      font-size: 90%;
+      padding: 5px;
+      box-sizing: border-box;
+  }
+  .codeLabel {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+  }
+  #CSScontainer, #JScontainer, #HTMLcontainer, #Resultscontainer  {
+      display: none;
+  }
+  iframe {
+      height: 100%;
+      position: relative;
+      left: 20px;
+      border: none;
+  }
+  .selected {
+      background-color: black;
+      border: 1px solid green;
+      border-radius: 4px;
+      padding: 0;
+  }
+    </style>
+    <title>code runner</title>
+  </head>
+  <body>
+    <div id="container">
+        <div id="topbar">
+            <div class="logo">
+                <p>CodeRunner</p>
+            </div>
+            <div class="runbtn">
+                <button id="run">Run</button>
+            </div>
+            <ul id="toggle">
+                <li class="toggle">HTML</li>
+                <li class="toggle">CSS</li>
+                <li class="toggle">JS</li>
+                <li class="toggle">Results</li>
+        </div>
+        <div class="clear"></div>
+        <div id="HTMLcontainer" class="appcontainer">
+            <div class="codeLabel">
+                HTML
+            </div>
+            <textarea id="htmlCode">type in here</textarea>
+        </div>
+        <div id="CSScontainer" class="appcontainer">
+            <div class="codeLabel">
+                CSS
+            </div>
+            <textarea id="cssCode">type code here</textarea>
+        </div>
+        <div id="JScontainer" class="appcontainer">
+            <div class="codeLabel">
+                JS
+            </div>
+            <textarea id="jsCode">type in here</textarea>
+        </div>
+        <div id="Resultscontainer" class="appcontainer">
+            <div class="codeLabel">
+                Results
+            </div>
+            <iframe id="results">
+
+            </iframe>
+        </div>
+
+    </div>
+    </div>
+  <script type="text/javascript">
+  var windowHeight = $(window).height();
+  var menuBarHeight = $("#topbar").height();
+  var appHeight = windowHeight - menuBarHeight;
+  $(".appcontainer").height(appHeight + "px");
+  //top buttons functions
+  $(".toggle").click(function() {
+      $(this).toggleClass("selected");
+//toggles what divs appears based on what menu button is clicked
+      var activeDiv = $(this).html();
+      $("#" + activeDiv + "container").toggle();
+      var showingDivs = $(".appcontainer").filter(function() {
+          return ($(this).css("display") != "none");
+      }).length;
+      var width = 100 / showingDivs;
+      $(".appcontainer").width(width + "%");
+  });
+  //runs code thats in the divs in iframe
+  $("#run").click(function() {
+  //validates and runs html code in iframe
+      $("iframe").contents().find("html").html('<style>' + $("#cssCode").val() + '</style>' + $("#htmlCode").val());
+      document.getElementById('results').contentWindow.eval($("#jsCode").val());
+  });
+  </script>
+  </body>
+</html>
